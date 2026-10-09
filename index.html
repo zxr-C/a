@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#150f26">
+<title>测测你的隐藏人格，连你自己都没发现</title>
+<style>
+  :root {
+    --bg-0: #120d20;
+    --bg-1: #1c1430;
+    --bg-2: #271a40;
+    --ink: #f0eaf8;
+    --muted: #a99ec6;
+    --dim: #81779c;
+    --gold: #d9b36a;
+    --gold-2: #f0d28a;
+    --lav: #c3a6ff;
+    --line: rgba(195, 166, 255, 0.18);
+    --card: rgba(255, 255, 255, 0.045);
+    --glow: rgba(195, 166, 255, 0.35);
+    --serif: "Georgia", "Songti SC", "STSong", "SimSun", serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 46%, var(--bg-2) 100%);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    display: flex;
+    justify-content: center;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 11% 20%, rgba(240, 234, 248, 0.9), transparent 60%),
+      radial-gradient(1px 1px at 28% 9%, rgba(240, 234, 248, 0.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 47% 26%, rgba(217, 179, 106, 0.8), transparent 60%),
+      radial-gradient(1px 1px at 63% 14%, rgba(240, 234, 248, 0.65), transparent 60%),
+      radial-gradient(1.5px 1.5px at 79% 22%, rgba(195, 166, 255, 0.85), transparent 60%),
+      radial-gradient(1px 1px at 91% 12%, rgba(240, 234, 248, 0.7), transparent 60%),
+      radial-gradient(1px 1px at 7% 62%, rgba(195, 166, 255, 0.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 16% 82%, rgba(240, 234, 248, 0.6), transparent 60%),
+      radial-gradient(1px 1px at 36% 72%, rgba(217, 179, 106, 0.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 55% 88%, rgba(240, 234, 248, 0.5), transparent 60%),
+      radial-gradient(1px 1px at 73% 78%, rgba(195, 166, 255, 0.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 88% 66%, rgba(240, 234, 248, 0.55), transparent 60%);
+  }
+
+  .app {
+    width: 100%;
+    max-width: 760px;
+    padding: 36px 20px 76px;
+  }
+
+  .page {
+    display: none;
+    animation: pageIn 0.4s ease both;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  @keyframes pageIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    color: var(--gold-2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .eyebrow .star {
+    color: var(--gold);
+  }
+
+  /* Start page */
+  .start-wrap {
+    text-align: center;
+    padding-top: 34px;
+  }
+
+  .start-wrap h1 {
+    margin: 26px auto 16px;
+    max-width: 660px;
+    font-family: var(--serif);
+    font-size: clamp(31px, 7vw, 48px);
+    line-height: 1.22;
+    font-weight: 700;
+  }
+
+  .start-wrap h1 .gold {
+    color: var(--gold-2);
+  }
+
+  .start-wrap .subtitle {
+    max-width: 500px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.85;
+  }
+
+  .mirror {
+    width: 210px;
+    height: auto;
+    margin: 4px auto 2px;
+    display: block;
+    filter: drop-shadow(0 18px 36px rgba(99, 66, 168, 0.55));
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 15px 32px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #241a3d;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 14px 34px rgba(217, 179, 106, 0.28);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(217, 179, 106, 0.38);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .disclaimer {
+    margin: 34px auto 0;
+    max-width: 480px;
+    color: #6f668a;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* Quiz page */
+  .quiz-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .quiz-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .quiz-pct {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--gold-2);
+  }
+
+  .progress {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(195, 166, 255, 0.14);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), var(--lav));
+    transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .question {
+    margin: 40px 0 28px;
+    font-family: var(--serif);
+    font-size: clamp(23px, 5vw, 32px);
+    line-height: 1.45;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 15px 16px;
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.045);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.5;
+    transition: transform 0.14s ease, border-color 0.14s ease, background 0.14s ease,
+      box-shadow 0.14s ease;
+  }
+
+  .option:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217, 179, 106, 0.65);
+    background: rgba(217, 179, 106, 0.08);
+  }
+
+  .option .letter {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: rgba(195, 166, 255, 0.16);
+    color: var(--lav);
+    font-size: 14px;
+    font-weight: 800;
+    transition: background 0.14s ease, color 0.14s ease;
+  }
+
+  .option.picked {
+    border-color: var(--gold);
+    background: rgba(217, 179, 106, 0.14);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(217, 179, 106, 0.16);
+  }
+
+  .option.picked .letter {
+    background: var(--gold);
+    color: #241a3d;
+  }
+
+  .quiz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .nav-btn {
+    flex: 0 0 auto;
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    border-color: var(--gold);
+    color: var(--gold-2);
+    background: rgba(217, 179, 106, 0.08);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.28;
+    cursor: default;
+  }
+
+  .nav-hint {
+    flex: 1 1 auto;
+    text-align: center;
+    color: #7e739b;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Result page */
+  .result-wrap {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .rarity {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(195, 166, 255, 0.1);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .rarity b {
+    color: var(--gold-2);
+    font-weight: 800;
+  }
+
+  .result-icon {
+    margin: 28px auto 8px;
+    font-size: 76px;
+    line-height: 1;
+    filter: drop-shadow(0 12px 24px rgba(99, 66, 168, 0.55));
+  }
+
+  .result-name {
+    margin: 16px 0 10px;
+    font-family: var(--serif);
+    font-size: clamp(30px, 6.5vw, 42px);
+    font-weight: 700;
+    color: var(--gold-2);
+  }
+
+  .result-quote {
+    margin: 0 auto;
+    max-width: 480px;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  .result-match {
+    margin-top: 18px;
+    color: var(--gold-2);
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(195, 166, 255, 0.12);
+    border: 1px solid var(--line);
+    color: var(--lav);
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .divider {
+    height: 1px;
+    margin: 28px 0;
+    background: linear-gradient(90deg, transparent, rgba(217, 179, 106, 0.55), transparent);
+  }
+
+  .result-block {
+    text-align: left;
+    margin-bottom: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+  }
+
+  .result-block h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--gold-2);
+    letter-spacing: 0;
+  }
+
+  .result-block p {
+    margin: 0;
+    color: #cfc6e4;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  .result-footer {
+    margin-top: 28px;
+    color: #6f668a;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 520px) {
+    .app {
+      padding: 26px 16px 56px;
+    }
+    .option {
+      padding: 14px;
+      font-size: 15px;
+    }
+    .nav-hint {
+      white-space: normal;
+      font-size: 11px;
+    }
+    .quiz-nav {
+      gap: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="app">
+    <!-- 开始页 -->
+    <section id="page-start" class="page active">
+      <div class="start-wrap">
+        <span class="eyebrow"><span class="star">✦</span>隐藏人格鉴定</span>
+
+        <svg class="mirror" viewBox="0 0 210 230" role="img" aria-label="魔法镜">
+          <defs>
+            <linearGradient id="mirrorGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b2766"/>
+              <stop offset="55%" stop-color="#241a40"/>
+              <stop offset="100%" stop-color="#120d20"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="105" cy="125" rx="68" ry="92" fill="none" stroke="#d9b36a" stroke-width="12"/>
+          <ellipse cx="105" cy="125" rx="59" ry="83" fill="url(#mirrorGrad)" stroke="#f0d28a" stroke-width="2"/>
+          <path d="M68 118 Q105 84 144 116" fill="none" stroke="rgba(195,166,255,0.5)" stroke-width="2"/>
+          <path d="M74 140 Q105 168 138 138" fill="none" stroke="rgba(217,179,106,0.45)" stroke-width="2"/>
+          <path d="M105 42 L110 64 L128 52 Z" fill="#f0d28a"/>
+          <circle cx="72" cy="60" r="2.4" fill="#f0eaf8" opacity="0.85"/>
+          <circle cx="148" cy="86" r="2" fill="#c3a6ff"/>
+          <circle cx="152" cy="176" r="2.4" fill="#f0d28a" opacity="0.8"/>
+          <circle cx="56" cy="182" r="2" fill="#f0eaf8" opacity="0.75"/>
+        </svg>
+
+        <h1>测测你的<span class="gold">隐藏人格</span>，连你自己都没发现</h1>
+        <p class="subtitle">有些性格，藏在连你自己都没察觉的角落。现在，让这面镜子照见那个被你藏起来的自己。</p>
+
+        <button id="startBtn" class="btn-primary" type="button">
+          开启鉴定
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+
+        <p class="disclaimer">仅供娱乐，不构成心理评估/诊断。请跟着第一感觉作答。</p>
+      </div>
+    </section>
+
+    <!-- 题目页 -->
+    <section id="page-quiz" class="page">
+      <div class="quiz-head">
+        <span id="quizCount" class="quiz-count">第 1 / 30 题</span>
+        <span id="quizPct" class="quiz-pct">0%</span>
+      </div>
+      <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+
+      <h2 id="questionText" class="question"></h2>
+      <div id="options" class="options"></div>
+
+      <div class="quiz-nav">
+        <button id="prevBtn" class="nav-btn" type="button">‹ 上一题</button>
+        <span id="navHint" class="nav-hint">选择后自动进入下一题</span>
+        <button id="nextBtn" class="nav-btn" type="button">下一题 ›</button>
+      </div>
+    </section>
+
+    <!-- 结果页 -->
+    <section id="page-result" class="page">
+      <div class="result-wrap">
+        <span class="rarity">稀有度 <b id="rarityVal"></b></span>
+        <div id="resultIcon" class="result-icon"></div>
+        <h2 id="resultName" class="result-name"></h2>
+        <p id="resultQuote" class="result-quote"></p>
+        <div id="resultMatch" class="result-match"></div>
+        <div id="resultTags" class="result-tags"></div>
+        <div class="divider"></div>
+        <div class="result-block">
+          <h3>详细描述</h3>
+          <p id="resultDetail"></p>
+        </div>
+        <div class="result-block">
+          <h3>隐藏优势</h3>
+          <p id="resultStrength"></p>
+        </div>
+        <div class="result-block">
+          <h3>小提醒</h3>
+          <p id="resultTip"></p>
+        </div>
+        <button id="restartBtn" class="btn-primary" type="button">
+          再测一次
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <p class="result-footer">仅供娱乐，不构成心理评估/诊断。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const PERSONALITIES = [
+      {
+        name: "月光收藏家",
+        emoji: "🌙",
+        color: "#c3a6ff",
+        rarity: 12,
+        quote: "别人在数日子，你在收集月光。",
+        tags: ["感性", "念旧", "浪漫"],
+        detail: "你习惯把柔软的那一面收进抽屉，只在独处时轻轻打开。你会因为一段旋律、一束黄昏或一句不经意的温柔而心动很久，也会把喜欢的片段反复回味，像收藏一枚枚发亮的月亮。你未必张扬，却总在细节里留下诗意：一首歌、一张旧照片、一次没有说破的对视，都能被你读出别人看不见的层次。你怕被看穿，所以常常装作不在意，其实心里早就起风了。",
+        strength: "你的共情力与审美力都很强，能从平淡里读出别人忽略的层次，也擅长把情绪安放得恰到好处。你会让人在不知不觉中被你柔软地接住，却又不觉得被冒犯，这是很稀缺的温柔。",
+        tip: "别总把温柔留到深夜，偶尔也让它在白天见见光；你的浪漫值得被看见。"
+      },
+      {
+        name: "清醒的伪装者",
+        emoji: "🦋",
+        color: "#e6c87a",
+        rarity: 9,
+        quote: "你看上去很好说话，其实心里早有答案。",
+        tags: ["目标感", "清醒", "行动派"],
+        detail: "你很少把野心写在脸上。别人以为你随和、无所谓，其实你一直在心里画地图，知道下一站去哪、下一步怎么走，也清楚自己要付出什么、放弃什么。你善于在不动声色中观察局势、判断轻重，等时机一到就稳稳出手。你不是计较，只是不愿意浪费自己的可能性。温和是你的外壳，清晰才是你的底色；你看似让了半步，其实早就算好了三步。",
+        strength: "你的目标感和执行力都很在线，擅长把大目标拆成能落地的步骤，并持续地朝结果靠近。你也很有分寸感，懂得什么时候藏、什么时候露，这让你在复杂环境里显得格外可靠。",
+        tip: "适时让别人看到你的野心和努力，会减少很多不必要的误解，也能帮你争取到本该属于你的支持。"
+      },
+      {
+        name: "深海思考者",
+        emoji: "🌊",
+        color: "#8aa0ff",
+        rarity: 14,
+        quote: "别人说“别想太多”，你已经在想“为什么”。",
+        tags: ["理性", "好奇", "洞察"],
+        detail: "你天生爱追问意义，习惯把生活拆成一个个问题去理解：为什么人会这样想、为什么事情会这样发生、什么才真正值得。热闹是你的背景音，思考才是你的主场，很多别人一带而过的东西，都会在你脑子里被反复拆解、重组。你看起来冷静甚至疏离，其实只是把喧嚣让给了世界，把深度留给了自己。你需要的不是被理解，而是被允许慢慢想明白。",
+        strength: "你的逻辑清晰、洞察力强，总能看到事情背后的结构和规律，也能在混乱中抓住真正的关键。别人还在就事论事，你往往已经看到了更深一层的因果。",
+        tip: "想得深很好，但别忘了回到此刻。答案有时不在脑子里，而在一次真实的体验里。"
+      },
+      {
+        name: "温柔反叛者",
+        emoji: "🕊️",
+        color: "#d48cff",
+        rarity: 11,
+        quote: "表面安安稳稳，心里早就想翻墙出去看世界。",
+        tags: ["自由", "勇气", "随性"],
+        detail: "你有一副让人安心的样子，却总在心底渴望新鲜、未知和一点越界的刺激。你可能是那个在计划表旁偷偷查机票的人，也可能是那个在大家都说“算了”时，安静说出“要不试试”的人。你不喜欢被一条路绑住，总想看看围栏外面还有什么，也愿意为一次没来由的心动临时改变行程。你的叛逆不吵闹、不伤人，却很有力量，像一株向着光长歪了也照样开花的植物。",
+        strength: "你的适应力和胆量兼具，既能把眼前的日子过稳，也敢在关键时刻迈出那一步。你很少被“应该怎样”框住，所以总能在别人犹豫时率先找到出口。",
+        tip: "想出发的时候不用等“万事俱备”，方向对了就可以先走；有些路，走起来才有答案。"
+      },
+      {
+        name: "沉默的守灯人",
+        emoji: "🏮",
+        color: "#f0b46b",
+        rarity: 13,
+        quote: "你记得每个人的口味，却总忘记自己的。",
+        tags: ["可靠", "共情", "责任感"],
+        detail: "你比你以为的更会照顾人。你记得别人的情绪、口味和没说出口的话，常常默默把局面稳住，再把疲惫留给自己。别人看到的可能是你的可靠和淡定，却很少知道你也在很多个瞬间偷偷扛下过重的东西。你外冷内热，越是在乎，越是不说，习惯用行动代替解释。你不是没有需求，只是太习惯把别人的需求排在前面。",
+        strength: "你的可靠和细腻是稀缺品质，总能在关键时刻成为别人最踏实的依靠。你有很强的觉察力，往往别人还没开口，你已经知道该递上一杯水还是留一句安静。",
+        tip: "照顾世界之前，记得先照顾好自己。你也很值得被照顾、被惦记、被坚定地选择。"
+      },
+      {
+        name: "完美织网者",
+        emoji: "🕸️",
+        color: "#b78cff",
+        rarity: 8,
+        quote: "你不是挑剔，只是心里有把看不见的尺子。",
+        tags: ["自律", "细节控", "高标准"],
+        detail: "你希望事情做得漂亮、体面、不出错，于是总比别人多想一步、多查一遍，把细节一点点织成一张严丝合缝的网。你心里有把看不见的尺子，量别人也量自己，常常因为那一点“还不够好”而反复打磨。你的认真常常藏在琐碎里，不显眼却很可靠，让经你手的东西自带一种让人放心的质感。你不是吹毛求疵，你只是不愿意让“差不多”成为答案。",
+        strength: "你的执行力和标准感极强，别人想到七分，你能做到十分。你擅长提前识别风险、补齐漏洞，也愿意为质量多花时间，这种稳定和周到很难被替代。",
+        tip: "完美是方向，不是终点。偶尔放过那 5% 的瑕疵，人生会轻松很多，你的好也不会因此减少。"
+      },
+      {
+        name: "造光者",
+        emoji: "✨",
+        color: "#ffd27a",
+        rarity: 15,
+        quote: "你不是热闹本身，却总能让气氛悄悄亮起来。",
+        tags: ["感染力", "敏锐", "温暖"],
+        detail: "你很会和人相处，只是不一定总想主动。你能敏锐地捕捉气氛，知道什么时候接梗、什么时候安静、什么时候把话题轻轻带回到对的方向。和人连接是你充电的方式，也是你不动声色的天赋，很多人和你待在一起会莫名放松，因为你不争不抢，却总能让人觉得自己被看见了。你未必是人群里最响亮的那个，却常常是让整场气氛悄悄变亮的那一个。",
+        strength: "你的亲和力和感染力，能让人在不知不觉中放下防备，愿意向你靠近。你擅长在关系里找到舒服的平衡，既不越界也不疏离，这是很难得的分寸感。",
+        tip: "不用一直做别人的光，也允许自己偶尔躲进阴影里歇一歇。被照顾，也是你可以拥有的关系。"
+      },
+      {
+        name: "梦境建筑师",
+        emoji: "🌀",
+        color: "#7fe0cf",
+        rarity: 10,
+        quote: "别人看到一个问题，你看到一整片可能性。",
+        tags: ["想象力", "独特", "灵感"],
+        detail: "你总有些别人想不到的点子，看世界的角度也与众不同：别人看到一个问题，你看到一整片可能性；别人沿着直线走，你在脑子里绕出无数条岔路。你未必张扬，但想象力和好奇心一直在悄悄工作，随时准备把平凡变有趣、把旧东西重新拼出新样子。你的脑子里住着一个不肯按常理出牌的世界，偶尔会显得不合时宜，却也因此格外珍贵。",
+        strength: "你的创造力和联想力出众，能把看似无关的东西连起来，生出新的可能。你对新鲜事物保持开放，也不怕推翻重来，这种弹性让你总能在困境里找到一条别人没想到的路。",
+        tip: "灵感值得被认真对待，别让它在“改天再说”里溜走。哪怕先做一点点，也比一直想更好。"
+      },
+      {
+        name: "你没有隐藏人格",
+        emoji: "🪞",
+        color: "#b9b0c7",
+        rarity: 1,
+        quote: "测试想挖点秘密，结果挖到一块透明玻璃。",
+        tags: ["真诚", "低内耗", "不装"],
+        detail: "你的答案分布得异常均匀，几乎每个方向都沾一点，却没有哪一面特别突出。也许你真的活得很坦荡，情绪来去清楚、喜好坦率、不擅长伪装；也许你把自己藏得太深、太平均，连测试都找不到一个明确的破绽。无论如何，这都是全场最稀有的一种答案：你不是某一类人，你就是那个很难被简单定义的人。",
+        strength: "你有一种难得的自洽，不容易被单一标签定义，也不急着成为别人期待的样子。你的情绪和选择常常很真实，少了内耗和表演，反而活得轻盈。",
+        tip: "找不到隐藏人格也没关系，真实本身就很珍贵。继续保持你的样子，就已经足够好了。",
+        egg: true
+      }
+    ];
+
+    // o: [选项文字, 主人格索引, 副人格索引?]
+    const QUESTIONS = [
+      { q: "周末突然多出一整天空闲，你的第一反应是？", o: [
+        ["立刻约人出门，把这一天过得热热闹闹", 6, 3],
+        ["列个清单，把积攒的小事一件件做完", 5, 1],
+        ["宅家发呆，沉浸在自己的世界里", 2, 7],
+        ["临时起意，去一个没去过的地方", 3, 0]
+      ]},
+      { q: "朋友最常夸你的是哪一点？", o: [
+        ["你好会照顾人", 4, 0],
+        ["你好有想法", 2, 7],
+        ["跟你聊天好开心", 6, 3],
+        ["你好自律", 5, 1]
+      ]},
+      { q: "如果给你一个超能力，你更想要？", o: [
+        ["让所有人都喜欢我", 6, 0],
+        ["预知未来", 2, 1],
+        ["隐形，然后到处探索", 3, 7],
+        ["让这个世界变得更好一点", 4, 0]
+      ]},
+      { q: "深夜最容易让你失眠的原因是？", o: [
+        ["脑海里各种脑洞停不下来", 7, 2],
+        ["复盘今天哪里没做好", 5, 1],
+        ["想着某个人或某段关系", 0, 4],
+        ["盘算明天甚至更远的计划", 1, 5]
+      ]},
+      { q: "旅行时你更像哪种人？", o: [
+        ["攻略做得极其详细", 5, 1],
+        ["走到哪算哪，享受意外", 3, 7],
+        ["更看重和谁一起去", 0, 4],
+        ["疯狂拍照分享给朋友", 6, 3]
+      ]},
+      { q: "面对一个复杂的问题，你通常会？", o: [
+        ["先查资料，想清楚再动手", 5, 2],
+        ["凭直觉先试，边做边改", 7, 3],
+        ["找人一起讨论", 6, 4],
+        ["拆成小目标一步步来", 1, 5]
+      ]},
+      { q: "关于被别人记住，你更接近哪种想法？", o: [
+        ["希望有很多人喜欢并记得我", 6, 0],
+        ["希望因为我做成的事被记住", 1, 5],
+        ["只希望我在乎的人记得我就好", 4, 0],
+        ["其实不太想被别人记住", 2, 3]
+      ]},
+      { q: "收到一份很贵但不喜欢的礼物，你会？", o: [
+        ["开心收下，真诚道谢", 6, 4],
+        ["纠结要不要说实话", 0, 5],
+        ["想办法转赠或处理掉", 2, 1],
+        ["收下，并默默记下对方的心意", 4, 0]
+      ]},
+      { q: "你理想中的一天更接近？", o: [
+        ["充实地推进目标", 1, 5],
+        ["和喜欢的人悠闲相处", 0, 4],
+        ["尝试一件新鲜刺激的事", 3, 7],
+        ["安静地看书、思考", 2, 5]
+      ]},
+      { q: "群聊突然冷场，你会？", o: [
+        ["抛个梗活跃气氛", 6, 7],
+        ["安静观察，不急着说话", 2, 4],
+        ["把话题引到大家都关心的事", 4, 6],
+        ["发个表情包轻松带过", 3, 7]
+      ]},
+      { q: "你对“仪式感”怎么看？", o: [
+        ["很重要，让日子有温度", 0, 4],
+        ["偶尔需要，但别太麻烦", 5, 2],
+        ["形式而已，结果才重要", 1, 5],
+        ["自己定义，不随大流", 7, 3]
+      ]},
+      { q: "遇到不公平的事，你更倾向于？", o: [
+        ["站出来把话说清楚", 1, 4],
+        ["理性分析利弊再决定", 2, 5],
+        ["先安慰受影响的人", 4, 0],
+        ["看看大家什么态度再说", 6, 5]
+      ]},
+      { q: "你更喜欢哪种工作节奏？", o: [
+        ["明确目标，持续突破", 1, 5],
+        ["自由发挥，灵感驱动", 7, 3],
+        ["稳定规律，把事做好", 5, 4],
+        ["与人协作，氛围轻松", 6, 4]
+      ]},
+      { q: "一个人的时候，你最容易？", o: [
+        ["冒出很多奇怪的想法", 7, 2],
+        ["感到一点孤独，但也享受", 0, 2],
+        ["盘算接下来的计划", 1, 5],
+        ["彻底放松，想干嘛干嘛", 3, 7]
+      ]},
+      { q: "买衣服时你更看重？", o: [
+        ["舒服实用", 4, 5],
+        ["独特、有设计感", 7, 0],
+        ["大家觉得好看", 6, 0],
+        ["性价比高、物有所值", 5, 2]
+      ]},
+      { q: "如果身边一个关系不错的人突然失联，你会？", o: [
+        ["主动联系，确认对方还好吗", 4, 6],
+        ["先想是不是自己哪里做得不对", 0, 5],
+        ["给对方空间，等对方主动来找", 2, 4],
+        ["先忙自己的，相信对方会回来", 1, 3]
+      ]},
+      { q: "你更害怕错过什么？", o: [
+        ["重要的机会", 1, 5],
+        ["重要的人", 0, 4],
+        ["精彩的人生体验", 3, 7],
+        ["细节上的失误", 5, 2]
+      ]},
+      { q: "你更向往什么样的关系？", o: [
+        ["轰轰烈烈、刻骨铭心", 0, 3],
+        ["灵魂契合、能深聊", 2, 4],
+        ["彼此成就、共同成长", 1, 5],
+        ["轻松快乐、互相陪伴", 6, 4]
+      ]},
+      { q: "要做一件没做过的事时，你通常先做什么？", o: [
+        ["先做足准备和计划再开始", 5, 1],
+        ["先试试看，边做边调整", 7, 3],
+        ["先搞清楚怎么做最快最有效", 1, 5],
+        ["先放着，等有感觉了再动手", 3, 2]
+      ]},
+      { q: "看到一只流浪动物，你第一反应是？", o: [
+        ["心疼，想帮帮它", 4, 0],
+        ["拍照分享给朋友", 6, 3],
+        ["想象它背后的故事", 7, 2],
+        ["好奇它为什么会流浪", 2, 4]
+      ]},
+      { q: "最能推着你往前走的是哪一种感觉？", o: [
+        ["对未来的期待和兴奋", 0, 3],
+        ["对新鲜事物的好奇", 2, 7],
+        ["想赢、不甘心的那股劲", 1, 5],
+        ["身上放不下的责任感", 4, 5]
+      ]},
+      { q: "朋友聚会里，你通常扮演？", o: [
+        ["气氛担当", 6, 7],
+        ["照顾大家的那个人", 4, 4],
+        ["安静听大家说", 2, 0],
+        ["提议去点新鲜的地方", 3, 7]
+      ]},
+      { q: "你更相信？", o: [
+        ["缘分和感觉", 0, 3],
+        ["努力和规划", 1, 5],
+        ["逻辑和证据", 2, 5],
+        ["直觉和灵感", 7, 3]
+      ]},
+      { q: "一份工作里，你最不能忍受？", o: [
+        ["没有成长空间", 1, 5],
+        ["氛围压抑、冷漠", 0, 6],
+        ["重复无聊、没有变化", 3, 7],
+        ["混乱、没有标准", 5, 4]
+      ]},
+      { q: "你最享受哪一种时刻？", o: [
+        ["赢过别人，拿到想要的结果", 1, 5],
+        ["被很多人喜欢和认可", 6, 0],
+        ["真正帮到别人、被需要", 4, 0],
+        ["做出一个独一无二的东西", 7, 3]
+      ]},
+      { q: "你的手机相册里更多是？", o: [
+        ["风景和旅行", 3, 0],
+        ["自拍和合照", 6, 0],
+        ["截图和资料", 2, 5],
+        ["生活里的小确幸", 0, 4]
+      ]},
+      { q: "面对未知，你的态度是？", o: [
+        ["兴奋，想去看一看", 3, 7],
+        ["谨慎，先做好准备", 5, 2],
+        ["期待，相信会有惊喜", 0, 3],
+        ["思考，想搞明白规律", 2, 1]
+      ]},
+      { q: "你的房间或桌面更接近哪种状态？", o: [
+        ["整洁有序，每样东西都有位置", 5, 4],
+        ["看起来乱，但我知道东西在哪", 2, 7],
+        ["随性一点，乱一点更自在", 3, 7],
+        ["摆着很多有纪念意义的小物件", 0, 4]
+      ]},
+      { q: "如果生命能重来一次，你会？", o: [
+        ["换一种更精彩的人生", 3, 0],
+        ["还是选择现在的人", 0, 4],
+        ["少走弯路，更快成功", 1, 5],
+        ["去理解生命更深的意义", 2, 5]
+      ]},
+      { q: "最后一题：你觉得这次测试？", o: [
+        ["有点意思，想知道结果", 6, 3],
+        ["挺期待，希望准一点", 0, 5],
+        ["半信半疑，理性看待", 5, 2],
+        ["无所谓，玩玩而已", 3, 7]
+      ]}
+    ];
+
+    const LETTERS = ["A", "B", "C", "D"];
+    const TOTAL = QUESTIONS.length;
+
+    const $ = (id) => document.getElementById(id);
+    const pages = {
+      start: $("page-start"),
+      quiz: $("page-quiz"),
+      result: $("page-result")
+    };
+
+    let current = 0;
+    let answers = new Array(TOTAL).fill(-1);
+    let locked = false;
+    let timer = null;
+
+    function showPage(name) {
+      Object.keys(pages).forEach((key) => {
+        pages[key].classList.toggle("active", key === name);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderQuestion() {
+      clearTimeout(timer);
+      locked = false;
+      const item = QUESTIONS[current];
+      $("quizCount").textContent = `第 ${current + 1} / ${TOTAL} 题`;
+      const pct = Math.round((current / TOTAL) * 100);
+      $("quizPct").textContent = `${pct}%`;
+      $("progressFill").style.width = `${pct}%`;
+      $("questionText").textContent = item.q;
+      const isLast = current === TOTAL - 1;
+      $("navHint").textContent = isLast
+        ? "选择后点击『查看结果』"
+        : "选择后自动进入下一题";
+      $("nextBtn").textContent = isLast ? "查看结果 ›" : "下一题 ›";
+      $("prevBtn").disabled = current === 0;
+      $("nextBtn").disabled = answers[current] === -1;
+
+      const box = $("options");
+      box.innerHTML = "";
+      item.o.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+        btn.dataset.index = i;
+        if (answers[current] === i) btn.classList.add("picked");
+        const letter = document.createElement("span");
+        letter.className = "letter";
+        letter.textContent = LETTERS[i];
+        const text = document.createElement("span");
+        text.textContent = opt[0];
+        btn.appendChild(letter);
+        btn.appendChild(text);
+        box.appendChild(btn);
+      });
+    }
+
+    function selectOption(i) {
+      if (locked) return;
+      locked = true;
+      answers[current] = i;
+
+      const btns = Array.from($("options").children);
+      btns.forEach((b) => b.classList.remove("picked"));
+      btns[i].classList.add("picked");
+
+      const pct = Math.round(((current + 1) / TOTAL) * 100);
+      $("progressFill").style.width = `${pct}%`;
+      $("quizPct").textContent = `${pct}%`;
+      $("nextBtn").disabled = false;
+
+      if (current < TOTAL - 1) {
+        timer = setTimeout(() => {
+          current += 1;
+          renderQuestion();
+        }, 300);
+      } else {
+        locked = false;
+      }
+    }
+
+    function go(delta) {
+      clearTimeout(timer);
+      locked = false;
+      const next = current + delta;
+      if (next < 0 || next >= TOTAL) return;
+      current = next;
+      renderQuestion();
+    }
+
+    function computeScores() {
+      const s = new Array(8).fill(0);
+      QUESTIONS.forEach((item, qi) => {
+        const ans = answers[qi];
+        if (ans < 0) return;
+        const opt = item.o[ans];
+        s[opt[1]] += 2;
+        if (opt[2] !== undefined) s[opt[2]] += 1;
+      });
+      return s;
+    }
+
+    function showResult() {
+      const scores = computeScores();
+      const values = scores;
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      const winnerIndex = max - min <= 3 ? 8 : values.indexOf(max);
+      const total = values.reduce((a, b) => a + b, 0) || 1;
+      const p = PERSONALITIES[winnerIndex];
+
+      $("rarityVal").textContent = `${p.rarity}%`;
+      $("resultIcon").textContent = p.emoji;
+      $("resultName").textContent = p.name;
+      $("resultName").style.color = p.egg ? "#c7bfd6" : p.color;
+      $("resultQuote").textContent = `“${p.quote}”`;
+      $("resultMatch").textContent =
+        p.egg ? "匹配度 100%" : `匹配度 ${Math.min(98, 78 + Math.round((max / total) * 20))}%`;
+      $("resultDetail").textContent = p.detail;
+      $("resultStrength").textContent = p.strength;
+      $("resultTip").textContent = p.tip;
+
+      const tags = $("resultTags");
+      tags.innerHTML = "";
+      p.tags.forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = `#${t}`;
+        tags.appendChild(span);
+      });
+
+      showPage("result");
+    }
+
+    function restart() {
+      current = 0;
+      answers = new Array(TOTAL).fill(-1);
+      locked = false;
+      clearTimeout(timer);
+      renderQuestion();
+      showPage("quiz");
+    }
+
+    $("startBtn").addEventListener("click", restart);
+    $("restartBtn").addEventListener("click", restart);
+    $("prevBtn").addEventListener("click", () => go(-1));
+    $("nextBtn").addEventListener("click", () => {
+      if (answers[current] === -1) return;
+      clearTimeout(timer);
+      if (current === TOTAL - 1) {
+        showResult();
+      } else {
+        current += 1;
+        renderQuestion();
+      }
+    });
+
+    $("options").addEventListener("click", (e) => {
+      const btn = e.target.closest(".option");
+      if (btn) selectOption(Number(btn.dataset.index));
+    });
+  </script>
+</body>
+</html>
